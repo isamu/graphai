@@ -7,6 +7,7 @@ import {
   LoopData,
   ResultDataDictonary,
   ResultData,
+  DefaultResultData,
   CallbackDictonaryArgs,
   StaticNodeData,
   ComputedNodeData,
@@ -109,14 +110,14 @@ export class GraphAI {
     return nodes;
   }
 
-  private getValueFromResults(key: string, results: ResultDataDictonary<Record<string, any>>) {
+  private getValueFromResults(key: string, results: ResultDataDictonary<DefaultResultData>) {
     const source = parseNodeName(key);
     const result = results[source.nodeId];
-    return result && source.propId ? result[source.propId] : result;
+    return result && source.propId && typeof result === "object" ? result[source.propId] : result;
   }
 
   // for static
-  private initializeNodes(previousResults?: ResultDataDictonary<Record<string, any>>) {
+  private initializeNodes(previousResults?: ResultDataDictonary<DefaultResultData>) {
     // If the result property is specified, inject it.
     // If the previousResults exists (indicating we are in a loop),
     // process the update property (nodeId or nodeId.propId).
@@ -303,7 +304,7 @@ export class GraphAI {
   public resultsOf(sources: Array<DataSource>) {
     return sources.map((source) => {
       const result = this.nodes[source.nodeId].result;
-      return result && source.propId ? result[source.propId] : result;
+      return result && source.propId && typeof result === "object" ? result[source.propId] : result;
     });
   }
 }

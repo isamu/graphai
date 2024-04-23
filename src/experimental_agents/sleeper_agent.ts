@@ -2,7 +2,7 @@ import { AgentFunction } from "@/graphai";
 import { sleep } from "@/utils/utils";
 import deepmerge from "deepmerge";
 
-export const sleeperAgent: AgentFunction<{ duration?: number; value?: Record<string, any> }> = async (context) => {
+export const sleeperAgent: AgentFunction<{ duration?: number; value?: Record<string, any> }, Record<string, any>, Record<string, any>> = async (context) => {
   const { params, inputs } = context;
   await sleep(params?.duration ?? 10);
   return inputs.reduce((result: Record<string, any>, input: Record<string, any>) => {
@@ -10,11 +10,11 @@ export const sleeperAgent: AgentFunction<{ duration?: number; value?: Record<str
   }, params.value ?? {});
 };
 
-export const sleeperAgentDebug: AgentFunction<{ duration: number; value?: Record<string, any>; fail?: boolean }> = async ({
-  params,
-  inputs,
-  debugInfo: { retry },
-}) => {
+export const sleeperAgentDebug: AgentFunction<
+  { duration: number; value?: Record<string, any>; fail?: boolean },
+  Record<string, any>,
+  Record<string, any>
+> = async ({ params, inputs, debugInfo: { retry } }) => {
   await sleep(params.duration / (retry + 1));
   if (params.fail && retry < 2) {
     // console.log("failed (intentional)", nodeId, retry);

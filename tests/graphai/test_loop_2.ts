@@ -21,7 +21,7 @@ const graphdata_counter = {
   },
 };
 
-const counterAgent: AgentFunction<{}, { v: number }, { v: number }> = async ({ inputs }) => {
+const counterAgent: AgentFunction<Record<never, never>, { v: number }, { v: number }> = async ({ inputs }) => {
   return { v: (inputs[0].v || 0) + 1 };
 };
 

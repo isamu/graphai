@@ -1,5 +1,5 @@
 import { GraphAI, GraphData, AgentFunctionDictonary } from "@/graphai";
-import { NodeState } from "@/type";
+import { NodeState, DefaultResultData } from "@/type";
 
 import path from "path";
 import * as fs from "fs";
@@ -14,7 +14,7 @@ export const fileTestRunner = async (file: string, callbackDictonary: AgentFunct
   return await graphDataTestRunner(file, readGraphData(file), callbackDictonary, callback);
 };
 
-export const graphDataTestRunner = async (
+export const graphDataTestRunner = async <T = DefaultResultData> (
   logFileName: string,
   graph_data: GraphData,
   callbackDictonary: AgentFunctionDictonary,
@@ -41,7 +41,7 @@ export const graphDataTestRunner = async (
   callback(graph);
 
   try {
-    const results = await graph.run();
+    const results = await graph.run<T>();
     fs.writeFileSync(log_path, JSON.stringify(graph.transactionLogs(), null, 2));
     // console.log(graph.transactionLogs());
     return results;
@@ -51,6 +51,6 @@ export const graphDataTestRunner = async (
     }
     fs.writeFileSync(log_path, JSON.stringify(graph.transactionLogs(), null, 2));
     // console.log(graph.transactionLogs());
-    return graph.results();
+    return graph.results<T>();
   }
 };

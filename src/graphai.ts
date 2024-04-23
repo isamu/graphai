@@ -168,11 +168,11 @@ export class GraphAI {
   }
 
   // Public API
-  public results(): ResultDataDictonary {
-    return Object.keys(this.nodes).reduce((results: ResultDataDictonary, nodeId) => {
+  public results<T = DefaultResultData>(): ResultDataDictonary<T> {
+    return Object.keys(this.nodes).reduce((results: ResultDataDictonary<T>, nodeId) => {
       const node = this.nodes[nodeId];
       if (node.result !== undefined) {
-        results[nodeId] = node.result;
+        results[nodeId] = node.result as T;
       }
       return results;
     }, {});
@@ -202,7 +202,7 @@ export class GraphAI {
   }
 
   // Public API
-  public async run(): Promise<ResultDataDictonary> {
+  public async run<T = DefaultResultData>(): Promise<ResultDataDictonary<T>> {
     if (this.isRunning) {
       console.error("-- Already Running");
     }

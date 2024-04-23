@@ -17,7 +17,6 @@ export const sleeperAgentDebug: AgentFunction<
 > = async ({ params, inputs, debugInfo: { retry } }) => {
   await sleep(params.duration / (retry + 1));
   if (params.fail && retry < 2) {
-    // console.log("failed (intentional)", nodeId, retry);
     throw new Error("Intentional Failure");
   }
   return inputs.reduce((result: Record<string, any>, input: Record<string, any>) => {

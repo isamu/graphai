@@ -224,9 +224,10 @@ export class GraphAI {
   }
 
   // for computed
-  private runNode(node: ComputedNode) {
+  private async runNode(node: ComputedNode) {
     this.runningNodes.add(node.nodeId);
-    node.execute();
+    await node.execute();
+    this.removeRunning(node);
   }
 
   // for computed
@@ -240,7 +241,7 @@ export class GraphAI {
   }
 
   // for completed
-  public removeRunning(node: ComputedNode) {
+  private removeRunning(node: ComputedNode) {
     this.runningNodes.delete(node.nodeId);
     if (this.nodeQueue.length > 0) {
       const n = this.nodeQueue.shift();

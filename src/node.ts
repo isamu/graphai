@@ -98,18 +98,18 @@ export class ComputedNode extends Node {
   // This private method (only called while executing execute()) performs
   // the "retry" if specified. The transaction log must be updated before
   // callling this method.
-  private retry(state: NodeState, error: Error) {
+  private async retry(state: NodeState, error: Error) {
     this.state = state; // this.execute() will update to NodeState.Executing
     this.log.onError(this, this.graph, error.message);
 
     if (this.retryCount < this.retryLimit) {
       this.retryCount++;
-      this.execute();
+      await this.execute();
     } else {
       this.result = undefined;
       this.error = error;
       this.transactionId = undefined; // This is necessary for timeout case
-      this.graph.removeRunning(this);
+      // this.graph.removeRunning(this);
     }
   }
 
@@ -196,9 +196,9 @@ export class ComputedNode extends Node {
 
       this.onSetResult();
 
-      this.graph.removeRunning(this);
+      // this.graph.removeRunning(this);
     } catch (error) {
-      this.errorProcess(error, transactionId);
+      await this.errorProcess(error, transactionId);
     }
   }
 
@@ -213,17 +213,17 @@ export class ComputedNode extends Node {
   // This private method (called only by execute) processes an error received from
   // the agent function. It records the error in the transaction log and handles
   // the retry if specified.
-  private errorProcess(error: unknown, transactionId: number) {
+  private async errorProcess(error: unknown, transactionId: number) {
     if (!this.isCurrentTransaction(transactionId)) {
       console.log(`-- ${this.nodeId}: transactionId mismatch(error)`);
       return;
     }
 
     if (error instanceof Error) {
-      this.retry(NodeState.Failed, error);
+      await this.retry(NodeState.Failed, error);
     } else {
       console.error(`-- ${this.nodeId}: Unexpecrted error was caught`);
-      this.retry(NodeState.Failed, Error("Unknown"));
+      await this.retry(NodeState.Failed, Error("Unknown"));
     }
   }
 }

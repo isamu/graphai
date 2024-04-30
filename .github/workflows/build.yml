@@ -3,7 +3,7 @@ name: Update Build
 on:
   push:
     branches:
-      - test
+      - build
 
 jobs:
   builr:

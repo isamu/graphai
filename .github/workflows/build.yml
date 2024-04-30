@@ -28,7 +28,7 @@ jobs:
       run: |
         if [ $(git diff --staged --name-only | wc -l) != 0 ]; then
           git commit -m "Update lib"
-          git push origin main
+          git push origin build
         else
           echo "No change on image data and index"
         fi

@@ -3,7 +3,7 @@ name: Update Build
 on:
   push:
     branches:
-      - main
+      - cibuild
 
 permissions:
   contents: write
@@ -11,7 +11,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'receptron'
+    if: github.repository_owner == 'isamu'
     strategy:
       matrix:
         node-version: [20.x]

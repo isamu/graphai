@@ -11,6 +11,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/graphai/
     if: github.repository_owner == 'receptron'
     strategy:
       matrix:

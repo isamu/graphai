@@ -367,6 +367,10 @@ export class GraphAI {
     this.callbacks.push(callback);
   }
 
+  public resetCallback() {
+    this.callbacks = [];
+  }
+
   // Public API
   public transactionLogs() {
     return this.logs;
